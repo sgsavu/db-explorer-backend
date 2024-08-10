@@ -129,7 +129,7 @@ func removeRecord(table string, id string) (int64, error) {
 	return rowsAffected, nil
 }
 
-func connectToDb(connect Connect) {
+func connectToDb(connect Connect) error {
 	cfg := mysql.Config{
 		User:   connect.User,
 		Passwd: connect.Passwd,
@@ -141,13 +141,15 @@ func connectToDb(connect Connect) {
 	var err error
 	db, err = sql.Open("mysql", cfg.FormatDSN())
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	pingErr := db.Ping()
 	if pingErr != nil {
-		log.Fatal(pingErr)
+		return pingErr
 	}
+
+	return nil
 }
 
 func handleGetTable(tableName string) (any, error) {
@@ -228,7 +230,11 @@ func spinUpAPI() {
 					break
 				}
 
-				connectToDb(connect)
+				err := connectToDb(connect)
+				if err != nil {
+					log.Fatal("error: connecting to db")
+					break
+				}
 
 			case "GET_TABLES":
 				tables, err := getTables()
