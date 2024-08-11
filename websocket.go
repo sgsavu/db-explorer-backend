@@ -45,7 +45,7 @@ func handleWebSocket(c *websocket.Conn) {
 			response.StatusCode = fiber.StatusOK
 
 		case "GET_TABLES":
-			result, err := getTables()
+			result, err := getTables(db)
 			if err != nil {
 				log.Printf("GET_TABLES - getTables - %v", err)
 				response.StatusCode = fiber.StatusInternalServerError
@@ -63,7 +63,7 @@ func handleWebSocket(c *websocket.Conn) {
 				break
 			}
 
-			result, err := getTable(table)
+			result, err := getTable(db, table)
 			if err != nil {
 				log.Printf("GET_TABLE - getTable - %v", err)
 				response.StatusCode = fiber.StatusInternalServerError
@@ -81,7 +81,7 @@ func handleWebSocket(c *websocket.Conn) {
 				break
 			}
 
-			result, err := removeRecord(deleteRecordIntent.Table, deleteRecordIntent.ID)
+			result, err := removeRecord(db, deleteRecordIntent.Table, deleteRecordIntent.ID)
 			if err != nil {
 				log.Printf("DELETE_RECORD - removeRecord - %v", err)
 				response.StatusCode = fiber.StatusInternalServerError
@@ -132,7 +132,7 @@ func handleWebSocket(c *websocket.Conn) {
 }
 
 func sendTableUpdate(c *websocket.Conn, table string) {
-	result, err := getTable(table)
+	result, err := getTable(db, table)
 	if err != nil {
 		log.Printf("getTable: %v", err)
 	}

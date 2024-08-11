@@ -23,18 +23,18 @@ func connectToDb(connect ConnectIntent) error {
 	var err error
 	db, err = sql.Open("mysql", cfg.FormatDSN())
 	if err != nil {
-		return fmt.Errorf("opening db: %w", err)
+		return fmt.Errorf("connectToDb - opening db: %w", err)
 	}
 
 	err = db.Ping()
 	if err != nil {
-		return fmt.Errorf("pinging db: %w", err)
+		return fmt.Errorf("connectToDb - pinging db: %w", err)
 	}
 
 	return nil
 }
 
-func getTables() ([]string, error) {
+func getTables(db *sql.DB) ([]string, error) {
 	rows, err := db.Query("SHOW TABLES")
 	if err != nil {
 		return nil, fmt.Errorf("fetching tables: %w", err)
@@ -52,17 +52,17 @@ func getTables() ([]string, error) {
 	return tableNames, rows.Err()
 }
 
-func getTable(table string) (interface{}, error) {
-	query := fmt.Sprintf("SELECT * FROM %s;", table)
+func getTable(db *sql.DB, tableName string) (interface{}, error) {
+	query := fmt.Sprintf("SELECT * FROM %s;", tableName)
 	rows, err := db.Query(query)
 	if err != nil {
-		return nil, fmt.Errorf("query: %w", err)
+		return nil, fmt.Errorf("getTable - query: %w", err)
 	}
 	defer rows.Close()
 
 	columns, err := rows.Columns()
 	if err != nil {
-		return nil, fmt.Errorf("retrieving columns: %w", err)
+		return nil, fmt.Errorf("getTable - retrieving columns: %w", err)
 	}
 
 	sliceType := reflect.SliceOf(reflect.StructOf(createFields(columns)))
@@ -90,7 +90,7 @@ func getTable(table string) (interface{}, error) {
 	return sliceValue.Interface(), nil
 }
 
-func removeRecord(table, id string) (int64, error) {
+func removeRecord(db *sql.DB, table, id string) (int64, error) {
 	query := fmt.Sprintf("DELETE FROM %s WHERE ID = ?", table)
 	result, err := db.Exec(query, id)
 	if err != nil {

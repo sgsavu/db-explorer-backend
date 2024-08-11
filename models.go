@@ -51,3 +51,12 @@ type Response struct {
 	StatusCode int64       `json:"statusCode"`
 	Type       string      `json:"type"`
 }
+
+type RequestBody struct {
+	Connect ConnectIntent `json:"connect"`
+}
+
+type InsertRecordRequestBody struct {
+	Connect ConnectIntent `json:"connect"`
+	Payload []interface{} `json:"payload"`
+}
