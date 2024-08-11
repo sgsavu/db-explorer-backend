@@ -28,7 +28,7 @@ func handleWebSocket(c *websocket.Conn) {
 
 		switch request.Type {
 		case "CONNECT":
-			var connect Connect
+			var connect ConnectIntent
 			if err := mapToStruct(request.Payload, &connect); err != nil {
 				log.Printf("CONNECT - mapToStruct - %v", err)
 				response.StatusCode = fiber.StatusBadRequest
@@ -74,14 +74,14 @@ func handleWebSocket(c *websocket.Conn) {
 			response.StatusCode = fiber.StatusOK
 
 		case "DELETE_RECORD":
-			var deleteRecord DeleteRecord
-			if err := mapToStruct(request.Payload, &deleteRecord); err != nil {
+			var deleteRecordIntent DeleteRecordIntent
+			if err := mapToStruct(request.Payload, &deleteRecordIntent); err != nil {
 				log.Printf("DELETE_RECORD - mapToStruct - %v", err)
 				response.StatusCode = fiber.StatusBadRequest
 				break
 			}
 
-			result, err := removeRecord(deleteRecord.Table, deleteRecord.ID)
+			result, err := removeRecord(deleteRecordIntent.Table, deleteRecordIntent.ID)
 			if err != nil {
 				log.Printf("DELETE_RECORD - removeRecord - %v", err)
 				response.StatusCode = fiber.StatusInternalServerError
@@ -91,9 +91,34 @@ func handleWebSocket(c *websocket.Conn) {
 			response.Payload = result
 			response.StatusCode = fiber.StatusOK
 
-			sendTableUpdate(c, deleteRecord.Table)
+			sendTableUpdate(c, deleteRecordIntent.Table)
 
-		// case "INSERT_RECORD":
+		case "INSERT_RECORD":
+			var addRecordIntent AddRecordIntent
+			if err := mapToStruct(request.Payload, &addRecordIntent); err != nil {
+				log.Printf("INSERT_RECORD - mapToStruct - %v", err)
+				response.StatusCode = fiber.StatusBadRequest
+				break
+			}
+
+			columns, err := getColumns(db, addRecordIntent.Table)
+			if err != nil {
+				log.Printf("INSERT_RECORD - getColumns - %v", err)
+				response.StatusCode = fiber.StatusInternalServerError
+				break
+			}
+
+			result, err := addRecord(db, addRecordIntent.Table, columns, addRecordIntent.Record)
+			if err != nil {
+				log.Printf("INSERT_RECORD - addRecord - %v", err)
+				response.StatusCode = fiber.StatusInternalServerError
+				break
+			}
+
+			response.Payload = result
+			response.StatusCode = fiber.StatusOK
+
+			sendTableUpdate(c, addRecordIntent.Table)
 
 		default:
 			log.Printf("unknown request type: %s", request.Type)
@@ -113,8 +138,9 @@ func sendTableUpdate(c *websocket.Conn, table string) {
 	}
 
 	response := Response{
-		Type:    "GET_TABLE",
-		Payload: result,
+		Payload:    result,
+		StatusCode: fiber.StatusOK,
+		Type:       "GET_TABLE",
 	}
 
 	if err := c.WriteJSON(response); err != nil {

@@ -11,7 +11,7 @@ import (
 
 var db *sql.DB
 
-func connectToDb(connect Connect) error {
+func connectToDb(connect ConnectIntent) error {
 	cfg := mysql.Config{
 		User:   connect.User,
 		Passwd: connect.Passwd,

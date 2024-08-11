@@ -4,16 +4,21 @@ import (
 	"github.com/google/uuid"
 )
 
-type Connect struct {
+type ConnectIntent struct {
 	Addr   string `json:"address"`
 	DBName string `json:"dbName"`
 	User   string `json:"user"`
 	Passwd string `json:"password"`
 }
 
-type DeleteRecord struct {
+type DeleteRecordIntent struct {
 	Table string `json:"table"`
 	ID    string `json:"id"`
+}
+
+type AddRecordIntent struct {
+	Table  string        `json:"table"`
+	Record []interface{} `json:"record"`
 }
 
 type User struct {
