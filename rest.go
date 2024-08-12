@@ -122,7 +122,7 @@ func handleInsertRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	_, err = addRecord(db, tableName, columns, body.Payload)
+	_, err = addRecord(db, tableName, columns, body.Record)
 	if err != nil {
 		error := fmt.Sprintf("handleInsertRecord - %v", err)
 		log.Println(error)
