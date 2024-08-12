@@ -67,9 +67,8 @@ func handleTable(c *fiber.Ctx) error {
 
 func handleDeleteRecord(c *fiber.Ctx) error {
 	tableName := c.Params("name")
-	recordId := c.Params("id")
 
-	body := new(RequestBody)
+	body := new(RecordRequestBody)
 	if err := c.BodyParser(body); err != nil {
 		return err
 	}
@@ -82,7 +81,15 @@ func handleDeleteRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	_, err = removeRecord(db, tableName, recordId)
+	columns, err := getColumns(db, tableName)
+	if err != nil {
+		error := fmt.Sprintf("handleDeleteRecord - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	_, err = removeRecord(db, tableName, columns, body.Record)
 	if err != nil {
 		error := fmt.Sprintf("handleDeleteRecord - %v", err)
 		log.Println(error)
@@ -107,7 +114,7 @@ func handleDeleteRecord(c *fiber.Ctx) error {
 func handleInsertRecord(c *fiber.Ctx) error {
 	tableName := c.Params("name")
 
-	body := new(InsertRecordRequestBody)
+	body := new(RecordRequestBody)
 	if err := c.BodyParser(body); err != nil {
 		return err
 	}
@@ -179,6 +186,36 @@ func handleEditRecord(c *fiber.Ctx) error {
 	result, err := getTable(db, tableName)
 	if err != nil {
 		error := fmt.Sprintf("handleEditRecord - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	defer db.Close()
+
+	c.Status(fiber.StatusOK)
+	return c.JSON(fiber.Map{"result": result})
+}
+
+func handlePrimaryKeys(c *fiber.Ctx) error {
+	tableName := c.Params("name")
+
+	body := new(RequestBody)
+	if err := c.BodyParser(body); err != nil {
+		return err
+	}
+
+	db, err := connectToDb(body.Connect)
+	if err != nil {
+		error := fmt.Sprintf("handlePrimaryKeys - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	result, err := getPrimaryKeys(db, body.Connect.DBName, tableName)
+	if err != nil {
+		error := fmt.Sprintf("handlePrimaryKeys - %v", err)
 		log.Println(error)
 		c.Status(fiber.StatusInternalServerError)
 		return c.JSON(fiber.Map{"error": error})

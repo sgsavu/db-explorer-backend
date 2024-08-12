@@ -56,7 +56,7 @@ type RequestBody struct {
 	Connect ConnectIntent `json:"connect"`
 }
 
-type InsertRecordRequestBody struct {
+type RecordRequestBody struct {
 	Connect ConnectIntent `json:"connect"`
 	Record  []interface{} `json:"record"`
 }

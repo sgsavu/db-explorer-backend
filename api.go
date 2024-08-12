@@ -12,9 +12,10 @@ func initAPI() error {
 	v1 := app.Group("/v1")
 
 	v1.Post("/tables/", handleTables)
+	v1.Post("/tables/:name/primary-keys/", handlePrimaryKeys)
 	v1.Post("/tables/:name/records/", handleTable)
 	v1.Put("/tables/:name/records/", handleInsertRecord)
-	v1.Delete("/tables/:name/records/:id/", handleDeleteRecord)
+	v1.Delete("/tables/:name/records/", handleDeleteRecord)
 	v1.Patch("/tables/:name/records/:id/:field/", handleEditRecord)
 
 	return app.Listen(":3000")
