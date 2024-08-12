@@ -29,6 +29,8 @@ func handleTables(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
+	defer db.Close()
+
 	c.Status(fiber.StatusOK)
 	return c.JSON(fiber.Map{"result": result})
 }
@@ -56,6 +58,8 @@ func handleTable(c *fiber.Ctx) error {
 		c.Status(fiber.StatusInternalServerError)
 		return c.JSON(fiber.Map{"error": error})
 	}
+
+	defer db.Close()
 
 	c.Status(fiber.StatusOK)
 	return c.JSON(fiber.Map{"result": result})
@@ -93,6 +97,8 @@ func handleDeleteRecord(c *fiber.Ctx) error {
 		c.Status(fiber.StatusInternalServerError)
 		return c.JSON(fiber.Map{"error": error})
 	}
+
+	defer db.Close()
 
 	c.Status(fiber.StatusOK)
 	return c.JSON(fiber.Map{"result": result})
@@ -138,6 +144,8 @@ func handleInsertRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
+	defer db.Close()
+
 	c.Status(fiber.StatusOK)
 	return c.JSON(fiber.Map{"result": result})
 }
@@ -175,6 +183,8 @@ func handleEditRecord(c *fiber.Ctx) error {
 		c.Status(fiber.StatusInternalServerError)
 		return c.JSON(fiber.Map{"error": error})
 	}
+
+	defer db.Close()
 
 	c.Status(fiber.StatusOK)
 	return c.JSON(fiber.Map{"result": result})
