@@ -51,7 +51,7 @@ func getTables(db *sql.DB) ([]string, error) {
 }
 
 func getTable(db *sql.DB, tableName string) (interface{}, error) {
-	query := fmt.Sprintf("SELECT * FROM %s;", tableName)
+	query := fmt.Sprintf("SELECT * FROM `%s`;", tableName)
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, fmt.Errorf("getTable - query: %w", err)
@@ -125,7 +125,7 @@ func addRecord(db *sql.DB, tableName string, columns []string, values []interfac
 
 	placeholders := strings.Repeat("?, ", len(values)-1) + "?"
 
-	query := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)",
+	query := fmt.Sprintf("INSERT INTO `%s` (%s) VALUES (%s)",
 		tableName,
 		strings.Join(columns, ", "),
 		placeholders,
@@ -145,7 +145,7 @@ func addRecord(db *sql.DB, tableName string, columns []string, values []interfac
 }
 
 func editRecord(db *sql.DB, tableName string, field string, value any, recordId string) error {
-	query := fmt.Sprintf("UPDATE %s SET %s = ?  WHERE ID = ?", tableName, field)
+	query := fmt.Sprintf("UPDATE `%s` SET %s = ?  WHERE ID = ?", tableName, field)
 
 	result, err := db.Exec(query, value, recordId)
 	if err != nil {
@@ -177,7 +177,7 @@ func removeRecord(db *sql.DB, tableName string, columns []string, values []inter
 		conditions = append(conditions, fmt.Sprintf("%s = ?", col))
 	}
 
-	query := fmt.Sprintf("DELETE FROM %s WHERE %s", tableName, strings.Join(conditions, " AND "))
+	query := fmt.Sprintf("DELETE FROM `%s` WHERE %s", tableName, strings.Join(conditions, " AND "))
 
 	result, err := db.Exec(query, values...)
 	if err != nil {
@@ -220,4 +220,42 @@ func getPrimaryKeys(db *sql.DB, dbName, tableName string) ([]string, error) {
 	}
 
 	return primaryKeys, nil
+}
+
+func duplicateTable(db *sql.DB, originalTableName, newTableName string) error {
+	createTableQuery := fmt.Sprintf("CREATE TABLE `%s` LIKE `%s`;", newTableName, originalTableName)
+	_, err := db.Exec(createTableQuery)
+	if err != nil {
+		return fmt.Errorf("duplicateTable: failed to create table structure: %v", err)
+	}
+
+	insertDataQuery := fmt.Sprintf("INSERT INTO `%s` SELECT * FROM `%s`;", newTableName, originalTableName)
+	_, err = db.Exec(insertDataQuery)
+	if err != nil {
+		return fmt.Errorf("duplicateTable: failed to insert data into new table: %v", err)
+	}
+
+	return nil
+}
+
+func deleteTable(db *sql.DB, tableName string) error {
+	query := fmt.Sprintf("DROP TABLE IF EXISTS `%s`", tableName)
+
+	_, err := db.Exec(query)
+	if err != nil {
+		return fmt.Errorf("deleteTable: failed to delete table %s: %v", tableName, err)
+	}
+
+	return nil
+}
+
+func renameTable(db *sql.DB, oldTableName string, newTableName string) error {
+	query := fmt.Sprintf("RENAME TABLE `%s` TO `%s`;", oldTableName, newTableName)
+
+	_, err := db.Exec(query)
+	if err != nil {
+		return fmt.Errorf("renameTable: could not rename table: %v", err)
+	}
+
+	return nil
 }

@@ -226,3 +226,115 @@ func handlePrimaryKeys(c *fiber.Ctx) error {
 	c.Status(fiber.StatusOK)
 	return c.JSON(fiber.Map{"result": result})
 }
+
+func handleDuplicateTable(c *fiber.Ctx) error {
+	body := new(DuplicateTableRequestBody)
+	if err := c.BodyParser(body); err != nil {
+		return err
+	}
+
+	db, err := connectToDb(body.Connect)
+	if err != nil {
+		error := fmt.Sprintf("handleDuplicateTable - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	err = duplicateTable(db, body.SourceTableName, body.NewTableName)
+	if err != nil {
+		error := fmt.Sprintf("handleDuplicateTable - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	result, err := getTables(db)
+	if err != nil {
+		error := fmt.Sprintf("handleDuplicateTable - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	defer db.Close()
+
+	c.Status(fiber.StatusOK)
+	return c.JSON(fiber.Map{"result": result})
+}
+
+func handleDeleteTable(c *fiber.Ctx) error {
+	tableName := c.Params("name")
+
+	body := new(RequestBody)
+	if err := c.BodyParser(body); err != nil {
+		return err
+	}
+
+	db, err := connectToDb(body.Connect)
+	if err != nil {
+		error := fmt.Sprintf("handleDeleteTable - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	err = deleteTable(db, tableName)
+	if err != nil {
+		error := fmt.Sprintf("handleDeleteTable - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	result, err := getTables(db)
+	if err != nil {
+		error := fmt.Sprintf("handleDeleteTable - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	defer db.Close()
+
+	c.Status(fiber.StatusOK)
+	return c.JSON(fiber.Map{"result": result})
+}
+
+func handleRenameTable(c *fiber.Ctx) error {
+	tableName := c.Params("name")
+
+	body := new(RenameTableRequestBody)
+	if err := c.BodyParser(body); err != nil {
+		return err
+	}
+
+	db, err := connectToDb(body.Connect)
+	if err != nil {
+		error := fmt.Sprintf("handleRenameTable - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	err = renameTable(db, tableName, body.NewTableName)
+	if err != nil {
+		error := fmt.Sprintf("handleRenameTable - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	result, err := getTables(db)
+	if err != nil {
+		error := fmt.Sprintf("handleRenameTable - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	defer db.Close()
+
+	c.Status(fiber.StatusOK)
+	return c.JSON(fiber.Map{"result": result})
+}

@@ -65,3 +65,14 @@ type EditRecordRequestBody struct {
 	Connect ConnectIntent `json:"connect"`
 	Value   any           `json:"value"`
 }
+
+type DuplicateTableRequestBody struct {
+	Connect         ConnectIntent `json:"connect"`
+	SourceTableName string        `json:"sourceTableName"`
+	NewTableName    string        `json:"newTableName"`
+}
+
+type RenameTableRequestBody struct {
+	Connect      ConnectIntent `json:"connect"`
+	NewTableName string        `json:"newTableName"`
+}
