@@ -141,3 +141,41 @@ func handleInsertRecord(c *fiber.Ctx) error {
 	c.Status(fiber.StatusOK)
 	return c.JSON(fiber.Map{"result": result})
 }
+
+func handleEditRecord(c *fiber.Ctx) error {
+	tableName := c.Params("name")
+	field := c.Params("field")
+	recordId := c.Params("id")
+
+	body := new(EditRecordRequestBody)
+	if err := c.BodyParser(body); err != nil {
+		return err
+	}
+
+	db, err := connectToDb(body.Connect)
+	if err != nil {
+		error := fmt.Sprintf("handleEditRecord - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	err = editRecord(db, tableName, field, body.Value, recordId)
+	if err != nil {
+		error := fmt.Sprintf("handleEditRecord - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	result, err := getTable(db, tableName)
+	if err != nil {
+		error := fmt.Sprintf("handleEditRecord - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	c.Status(fiber.StatusOK)
+	return c.JSON(fiber.Map{"result": result})
+}

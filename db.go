@@ -88,8 +88,8 @@ func getTable(db *sql.DB, tableName string) (interface{}, error) {
 	return sliceValue.Interface(), nil
 }
 
-func removeRecord(db *sql.DB, table, id string) (int64, error) {
-	query := fmt.Sprintf("DELETE FROM %s WHERE ID = ?", table)
+func removeRecord(db *sql.DB, tableName, id string) (int64, error) {
+	query := fmt.Sprintf("DELETE FROM %s WHERE ID = ?", tableName)
 	result, err := db.Exec(query, id)
 	if err != nil {
 		return 0, fmt.Errorf("deleting record: %w", err)
@@ -97,7 +97,7 @@ func removeRecord(db *sql.DB, table, id string) (int64, error) {
 	return result.RowsAffected()
 }
 
-func getColumns(db *sql.DB, table string) ([]string, error) {
+func getColumns(db *sql.DB, tableName string) ([]string, error) {
 	query := `
 		SELECT COLUMN_NAME
 		FROM INFORMATION_SCHEMA.COLUMNS
@@ -105,7 +105,7 @@ func getColumns(db *sql.DB, table string) ([]string, error) {
 		ORDER BY ORDINAL_POSITION;
 	`
 
-	rows, err := db.Query(query, table)
+	rows, err := db.Query(query, tableName)
 	if err != nil {
 		return nil, fmt.Errorf("getColumns: %v", err)
 	}
@@ -127,7 +127,7 @@ func getColumns(db *sql.DB, table string) ([]string, error) {
 	return columns, nil
 }
 
-func addRecord(db *sql.DB, table string, columns []string, values []interface{}) (int64, error) {
+func addRecord(db *sql.DB, tableName string, columns []string, values []interface{}) (int64, error) {
 	if len(columns) == 0 || len(values) == 0 || len(columns) != len(values) {
 		return 0, fmt.Errorf("invalid columns or values length")
 	}
@@ -135,7 +135,7 @@ func addRecord(db *sql.DB, table string, columns []string, values []interface{})
 	placeholders := strings.Repeat("?, ", len(values)-1) + "?"
 
 	query := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)",
-		table,
+		tableName,
 		strings.Join(columns, ", "),
 		placeholders,
 	)
@@ -151,4 +151,24 @@ func addRecord(db *sql.DB, table string, columns []string, values []interface{})
 	}
 
 	return id, nil
+}
+
+func editRecord(db *sql.DB, tableName string, field string, value any, recordId string) error {
+	query := fmt.Sprintf("UPDATE %s SET %s = ?  WHERE ID = ?", tableName, field)
+
+	result, err := db.Exec(query, value, recordId)
+	if err != nil {
+		return fmt.Errorf("editRecord: %v", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("could not get rows affected: %v", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("no rows were updated, check if the employee_id exists")
+	}
+
+	return nil
 }

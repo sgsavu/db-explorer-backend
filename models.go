@@ -60,3 +60,8 @@ type InsertRecordRequestBody struct {
 	Connect ConnectIntent `json:"connect"`
 	Record  []interface{} `json:"record"`
 }
+
+type EditRecordRequestBody struct {
+	Connect ConnectIntent `json:"connect"`
+	Value   any           `json:"value"`
+}
