@@ -13,7 +13,7 @@ func handleTables(c *fiber.Ctx) error {
 		return err
 	}
 
-	err := connectToDb(body.Connect)
+	db, err := connectToDb(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleTables - %v", err)
 		log.Println(error)
@@ -41,7 +41,7 @@ func handleTable(c *fiber.Ctx) error {
 		return err
 	}
 
-	err := connectToDb(body.Connect)
+	db, err := connectToDb(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleTable - %v", err)
 		log.Println(error)
@@ -70,7 +70,7 @@ func handleDeleteRecord(c *fiber.Ctx) error {
 		return err
 	}
 
-	err := connectToDb(body.Connect)
+	db, err := connectToDb(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleDeleteRecord - %v", err)
 		log.Println(error)
@@ -106,7 +106,7 @@ func handleInsertRecord(c *fiber.Ctx) error {
 		return err
 	}
 
-	err := connectToDb(body.Connect)
+	db, err := connectToDb(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleInsertRecord - %v", err)
 		log.Println(error)

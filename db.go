@@ -9,9 +9,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 )
 
-var db *sql.DB
-
-func connectToDb(connect ConnectIntent) error {
+func connectToDb(connect ConnectIntent) (*sql.DB, error) {
 	cfg := mysql.Config{
 		User:   connect.User,
 		Passwd: connect.Passwd,
@@ -21,17 +19,17 @@ func connectToDb(connect ConnectIntent) error {
 	}
 
 	var err error
-	db, err = sql.Open("mysql", cfg.FormatDSN())
+	db, err := sql.Open("mysql", cfg.FormatDSN())
 	if err != nil {
-		return fmt.Errorf("connectToDb - opening db: %w", err)
+		return nil, fmt.Errorf("connectToDb - opening db: %w", err)
 	}
 
 	err = db.Ping()
 	if err != nil {
-		return fmt.Errorf("connectToDb - pinging db: %w", err)
+		return nil, fmt.Errorf("connectToDb - pinging db: %w", err)
 	}
 
-	return nil
+	return db, nil
 }
 
 func getTables(db *sql.DB) ([]string, error) {
