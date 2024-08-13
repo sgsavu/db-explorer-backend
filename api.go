@@ -19,7 +19,7 @@ func initAPI() error {
 	v1.Post("/tables/:name/records/", handleTable)
 	v1.Put("/tables/:name/records/", handleInsertRecord)
 	v1.Delete("/tables/:name/records/", handleDeleteRecord)
-	v1.Patch("/tables/:name/records/:id/:field/", handleEditRecord)
+	v1.Patch("/tables/:name/records/", handleEditRecord)
 
 	return app.Listen(":3000")
 }

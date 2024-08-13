@@ -145,10 +145,17 @@ func addRecord(db *sql.DB, tableName string, columns []string, values []interfac
 	return id, nil
 }
 
-func editRecord(db *sql.DB, tableName string, field string, value any, recordId string) error {
-	query := fmt.Sprintf("UPDATE `%s` SET %s = ?  WHERE ID = ?", tableName, field)
+func editRecord(
+	db *sql.DB,
+	tableName string,
+	recordIdColumn string,
+	recordIdValue string,
+	updateColumn string,
+	updateValue any,
+) error {
+	query := fmt.Sprintf("UPDATE `%s` SET %s = ?  WHERE %s = ?", tableName, updateColumn, recordIdColumn)
 
-	result, err := db.Exec(query, value, recordId)
+	result, err := db.Exec(query, updateValue, recordIdValue)
 	if err != nil {
 		return fmt.Errorf("editRecord: %v", err)
 	}

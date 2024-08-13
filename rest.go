@@ -159,8 +159,6 @@ func handleInsertRecord(c *fiber.Ctx) error {
 
 func handleEditRecord(c *fiber.Ctx) error {
 	tableName := c.Params("name")
-	field := c.Params("field")
-	recordId := c.Params("id")
 
 	body := new(EditRecordRequestBody)
 	if err := c.BodyParser(body); err != nil {
@@ -175,7 +173,7 @@ func handleEditRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	err = editRecord(db, tableName, field, body.Value, recordId)
+	err = editRecord(db, tableName, body.RecordInfo.Column, body.RecordInfo.Value, body.Update.Column, body.Update.Value)
 	if err != nil {
 		error := fmt.Sprintf("handleEditRecord - %v", err)
 		log.Println(error)

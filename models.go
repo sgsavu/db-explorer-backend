@@ -18,7 +18,15 @@ type RecordRequestBody struct {
 
 type EditRecordRequestBody struct {
 	Connect ConnectIntent `json:"connect"`
-	Value   any           `json:"value"`
+	Update  struct {
+		Column string `json:"column"`
+		Value  string `json:"value"`
+	} `json:"update"`
+	RecordInfo struct {
+		Column string `json:"column"`
+		Value  string `json:"value"`
+	} `json:"recordInfo"`
+	Value any `json:"value"`
 }
 
 type DuplicateTableRequestBody struct {
