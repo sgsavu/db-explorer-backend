@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"reflect"
+	"regexp"
 	"strings"
 
 	"github.com/go-sql-driver/mysql"
@@ -223,6 +224,11 @@ func getPrimaryKeys(db *sql.DB, dbName, tableName string) ([]string, error) {
 }
 
 func duplicateTable(db *sql.DB, originalTableName, newTableName string) error {
+	validName := regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)
+	if !validName.MatchString(originalTableName) || !validName.MatchString(newTableName) {
+		return fmt.Errorf("duplicateTable: table names must contain only letters, numbers, underscores, and dashes")
+	}
+
 	createTableQuery := fmt.Sprintf("CREATE TABLE `%s` LIKE `%s`;", newTableName, originalTableName)
 	_, err := db.Exec(createTableQuery)
 	if err != nil {
@@ -239,7 +245,7 @@ func duplicateTable(db *sql.DB, originalTableName, newTableName string) error {
 }
 
 func deleteTable(db *sql.DB, tableName string) error {
-	query := fmt.Sprintf("DROP TABLE IF EXISTS `%s`", tableName)
+	query := fmt.Sprintf("DROP TABLE `%s`", tableName)
 
 	_, err := db.Exec(query)
 	if err != nil {
