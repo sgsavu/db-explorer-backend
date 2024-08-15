@@ -10,7 +10,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 )
 
-func connectToDb(connect ConnectIntent) (*sql.DB, error) {
+func ConnectToDb(connect ConnectIntent) (*sql.DB, error) {
 	cfg := mysql.Config{
 		User:   connect.User,
 		Passwd: connect.Passwd,
@@ -33,7 +33,7 @@ func connectToDb(connect ConnectIntent) (*sql.DB, error) {
 	return db, nil
 }
 
-func getTables(db *sql.DB) ([]string, error) {
+func GetTables(db *sql.DB) ([]string, error) {
 	rows, err := db.Query("SHOW TABLES")
 	if err != nil {
 		return nil, fmt.Errorf("getTables - fetching tables: %w", err)
@@ -51,7 +51,7 @@ func getTables(db *sql.DB) ([]string, error) {
 	return tableNames, rows.Err()
 }
 
-func getTable(db *sql.DB, tableName string) (interface{}, error) {
+func GetTable(db *sql.DB, tableName string) (interface{}, error) {
 	query := fmt.Sprintf("SELECT * FROM `%s`;", tableName)
 	rows, err := db.Query(query)
 	if err != nil {
@@ -89,7 +89,7 @@ func getTable(db *sql.DB, tableName string) (interface{}, error) {
 	return sliceValue.Interface(), nil
 }
 
-func getColumns(db *sql.DB, tableName string) ([]string, error) {
+func GetColumns(db *sql.DB, tableName string) ([]string, error) {
 	query := `
 		SELECT COLUMN_NAME
 		FROM INFORMATION_SCHEMA.COLUMNS
@@ -119,7 +119,7 @@ func getColumns(db *sql.DB, tableName string) ([]string, error) {
 	return columns, nil
 }
 
-func addRecord(db *sql.DB, tableName string, columns []string, values []interface{}) (int64, error) {
+func AddRecord(db *sql.DB, tableName string, columns []string, values []interface{}) (int64, error) {
 	if len(columns) == 0 || len(values) == 0 || len(columns) != len(values) {
 		return 0, fmt.Errorf("addRecord: invalid columns or values length")
 	}
@@ -145,7 +145,7 @@ func addRecord(db *sql.DB, tableName string, columns []string, values []interfac
 	return id, nil
 }
 
-func editRecord(
+func EditRecord(
 	db *sql.DB,
 	tableName string,
 	recordIdColumn string,
@@ -172,7 +172,7 @@ func editRecord(
 	return nil
 }
 
-func removeRecord(db *sql.DB, tableName string, columns []string, values []interface{}) (int64, error) {
+func RemoveRecord(db *sql.DB, tableName string, columns []string, values []interface{}) (int64, error) {
 	if len(columns) != len(values) {
 		return 0, fmt.Errorf("removeRecord: columns and values length mismatch")
 	}
@@ -200,7 +200,7 @@ func removeRecord(db *sql.DB, tableName string, columns []string, values []inter
 	return rowsAffected, nil
 }
 
-func getPrimaryKeys(db *sql.DB, dbName, tableName string) ([]string, error) {
+func GetPrimaryKeys(db *sql.DB, dbName, tableName string) ([]string, error) {
 	query := `
 		SELECT COLUMN_NAME 
 		FROM information_schema.KEY_COLUMN_USAGE 
@@ -230,7 +230,7 @@ func getPrimaryKeys(db *sql.DB, dbName, tableName string) ([]string, error) {
 	return primaryKeys, nil
 }
 
-func duplicateTable(db *sql.DB, originalTableName, newTableName string) error {
+func DuplicateTable(db *sql.DB, originalTableName, newTableName string) error {
 	validName := regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)
 	if !validName.MatchString(originalTableName) || !validName.MatchString(newTableName) {
 		return fmt.Errorf("duplicateTable: table names must contain only letters, numbers, underscores, and dashes")
@@ -251,7 +251,7 @@ func duplicateTable(db *sql.DB, originalTableName, newTableName string) error {
 	return nil
 }
 
-func deleteTable(db *sql.DB, tableName string) error {
+func DeleteTable(db *sql.DB, tableName string) error {
 	query := fmt.Sprintf("DROP TABLE `%s`", tableName)
 
 	_, err := db.Exec(query)
@@ -262,7 +262,7 @@ func deleteTable(db *sql.DB, tableName string) error {
 	return nil
 }
 
-func renameTable(db *sql.DB, oldTableName string, newTableName string) error {
+func RenameTable(db *sql.DB, oldTableName string, newTableName string) error {
 	query := fmt.Sprintf("RENAME TABLE `%s` TO `%s`;", oldTableName, newTableName)
 
 	_, err := db.Exec(query)

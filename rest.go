@@ -13,7 +13,7 @@ func handleTables(c *fiber.Ctx) error {
 		return err
 	}
 
-	db, err := connectToDb(body.Connect)
+	db, err := ConnectToDb(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleTables - %v", err)
 		log.Println(error)
@@ -21,7 +21,7 @@ func handleTables(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	result, err := getTables(db)
+	result, err := GetTables(db)
 	if err != nil {
 		error := fmt.Sprintf("handleTables - %v", err)
 		log.Println(error)
@@ -43,7 +43,7 @@ func handleTable(c *fiber.Ctx) error {
 		return err
 	}
 
-	db, err := connectToDb(body.Connect)
+	db, err := ConnectToDb(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleTable - %v", err)
 		log.Println(error)
@@ -51,7 +51,7 @@ func handleTable(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	result, err := getTable(db, tableName)
+	result, err := GetTable(db, tableName)
 	if err != nil {
 		error := fmt.Sprintf("handleTable - %v", err)
 		log.Println(error)
@@ -73,7 +73,7 @@ func handleDeleteRecord(c *fiber.Ctx) error {
 		return err
 	}
 
-	db, err := connectToDb(body.Connect)
+	db, err := ConnectToDb(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleDeleteRecord - %v", err)
 		log.Println(error)
@@ -81,7 +81,7 @@ func handleDeleteRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	columns, err := getColumns(db, tableName)
+	columns, err := GetColumns(db, tableName)
 	if err != nil {
 		error := fmt.Sprintf("handleDeleteRecord - %v", err)
 		log.Println(error)
@@ -89,7 +89,7 @@ func handleDeleteRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	_, err = removeRecord(db, tableName, columns, body.Record)
+	_, err = RemoveRecord(db, tableName, columns, body.Record)
 	if err != nil {
 		error := fmt.Sprintf("handleDeleteRecord - %v", err)
 		log.Println(error)
@@ -97,7 +97,7 @@ func handleDeleteRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	result, err := getTable(db, tableName)
+	result, err := GetTable(db, tableName)
 	if err != nil {
 		error := fmt.Sprintf("handleDeleteRecord - %v", err)
 		log.Println(error)
@@ -119,7 +119,7 @@ func handleInsertRecord(c *fiber.Ctx) error {
 		return err
 	}
 
-	db, err := connectToDb(body.Connect)
+	db, err := ConnectToDb(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleInsertRecord - %v", err)
 		log.Println(error)
@@ -127,7 +127,7 @@ func handleInsertRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	columns, err := getColumns(db, tableName)
+	columns, err := GetColumns(db, tableName)
 	if err != nil {
 		error := fmt.Sprintf("handleInsertRecord - %v", err)
 		log.Println(error)
@@ -135,7 +135,7 @@ func handleInsertRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	_, err = addRecord(db, tableName, columns, body.Record)
+	_, err = AddRecord(db, tableName, columns, body.Record)
 	if err != nil {
 		error := fmt.Sprintf("handleInsertRecord - %v", err)
 		log.Println(error)
@@ -143,7 +143,7 @@ func handleInsertRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	result, err := getTable(db, tableName)
+	result, err := GetTable(db, tableName)
 	if err != nil {
 		error := fmt.Sprintf("handleInsertRecord - %v", err)
 		log.Println(error)
@@ -165,7 +165,7 @@ func handleEditRecord(c *fiber.Ctx) error {
 		return err
 	}
 
-	db, err := connectToDb(body.Connect)
+	db, err := ConnectToDb(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleEditRecord - %v", err)
 		log.Println(error)
@@ -173,7 +173,7 @@ func handleEditRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	err = editRecord(db, tableName, body.RecordInfo.Column, body.RecordInfo.Value, body.Update.Column, body.Update.Value)
+	err = EditRecord(db, tableName, body.RecordInfo.Column, body.RecordInfo.Value, body.Update.Column, body.Update.Value)
 	if err != nil {
 		error := fmt.Sprintf("handleEditRecord - %v", err)
 		log.Println(error)
@@ -181,7 +181,7 @@ func handleEditRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	result, err := getTable(db, tableName)
+	result, err := GetTable(db, tableName)
 	if err != nil {
 		error := fmt.Sprintf("handleEditRecord - %v", err)
 		log.Println(error)
@@ -203,7 +203,7 @@ func handlePrimaryKeys(c *fiber.Ctx) error {
 		return err
 	}
 
-	db, err := connectToDb(body.Connect)
+	db, err := ConnectToDb(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handlePrimaryKeys - %v", err)
 		log.Println(error)
@@ -211,7 +211,7 @@ func handlePrimaryKeys(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	result, err := getPrimaryKeys(db, body.Connect.DBName, tableName)
+	result, err := GetPrimaryKeys(db, body.Connect.DBName, tableName)
 	if err != nil {
 		error := fmt.Sprintf("handlePrimaryKeys - %v", err)
 		log.Println(error)
@@ -231,7 +231,7 @@ func handleDuplicateTable(c *fiber.Ctx) error {
 		return err
 	}
 
-	db, err := connectToDb(body.Connect)
+	db, err := ConnectToDb(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleDuplicateTable - %v", err)
 		log.Println(error)
@@ -239,7 +239,7 @@ func handleDuplicateTable(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	err = duplicateTable(db, body.SourceTableName, body.NewTableName)
+	err = DuplicateTable(db, body.SourceTableName, body.NewTableName)
 	if err != nil {
 		error := fmt.Sprintf("handleDuplicateTable - %v", err)
 		log.Println(error)
@@ -247,7 +247,7 @@ func handleDuplicateTable(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	result, err := getTables(db)
+	result, err := GetTables(db)
 	if err != nil {
 		error := fmt.Sprintf("handleDuplicateTable - %v", err)
 		log.Println(error)
@@ -269,7 +269,7 @@ func handleDeleteTable(c *fiber.Ctx) error {
 		return err
 	}
 
-	db, err := connectToDb(body.Connect)
+	db, err := ConnectToDb(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleDeleteTable - %v", err)
 		log.Println(error)
@@ -277,7 +277,7 @@ func handleDeleteTable(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	err = deleteTable(db, tableName)
+	err = DeleteTable(db, tableName)
 	if err != nil {
 		error := fmt.Sprintf("handleDeleteTable - %v", err)
 		log.Println(error)
@@ -285,7 +285,7 @@ func handleDeleteTable(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	result, err := getTables(db)
+	result, err := GetTables(db)
 	if err != nil {
 		error := fmt.Sprintf("handleDeleteTable - %v", err)
 		log.Println(error)
@@ -307,7 +307,7 @@ func handleRenameTable(c *fiber.Ctx) error {
 		return err
 	}
 
-	db, err := connectToDb(body.Connect)
+	db, err := ConnectToDb(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleRenameTable - %v", err)
 		log.Println(error)
@@ -315,7 +315,7 @@ func handleRenameTable(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	err = renameTable(db, tableName, body.NewTableName)
+	err = RenameTable(db, tableName, body.NewTableName)
 	if err != nil {
 		error := fmt.Sprintf("handleRenameTable - %v", err)
 		log.Println(error)
@@ -323,7 +323,7 @@ func handleRenameTable(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	result, err := getTables(db)
+	result, err := GetTables(db)
 	if err != nil {
 		error := fmt.Sprintf("handleRenameTable - %v", err)
 		log.Println(error)
