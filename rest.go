@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/sgsavu/sqlutils"
 )
 
 func handleTables(c *fiber.Ctx) error {
@@ -13,7 +14,7 @@ func handleTables(c *fiber.Ctx) error {
 		return err
 	}
 
-	db, err := ConnectToDb(body.Connect)
+	db, err := sqlutils.ConnectToMySQLDB(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleTables - %v", err)
 		log.Println(error)
@@ -21,7 +22,7 @@ func handleTables(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	result, err := GetTables(db)
+	result, err := sqlutils.GetTables(db)
 	if err != nil {
 		error := fmt.Sprintf("handleTables - %v", err)
 		log.Println(error)
@@ -43,7 +44,7 @@ func handleTable(c *fiber.Ctx) error {
 		return err
 	}
 
-	db, err := ConnectToDb(body.Connect)
+	db, err := sqlutils.ConnectToMySQLDB(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleTable - %v", err)
 		log.Println(error)
@@ -51,7 +52,7 @@ func handleTable(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	result, err := GetTable(db, tableName)
+	result, err := sqlutils.GetTable(db, tableName)
 	if err != nil {
 		error := fmt.Sprintf("handleTable - %v", err)
 		log.Println(error)
@@ -73,7 +74,7 @@ func handleDeleteRecord(c *fiber.Ctx) error {
 		return err
 	}
 
-	db, err := ConnectToDb(body.Connect)
+	db, err := sqlutils.ConnectToMySQLDB(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleDeleteRecord - %v", err)
 		log.Println(error)
@@ -81,7 +82,7 @@ func handleDeleteRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	columns, err := GetColumns(db, tableName)
+	columns, err := sqlutils.GetColumns(db, tableName)
 	if err != nil {
 		error := fmt.Sprintf("handleDeleteRecord - %v", err)
 		log.Println(error)
@@ -89,7 +90,7 @@ func handleDeleteRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	_, err = RemoveRecord(db, tableName, columns, body.Record)
+	_, err = sqlutils.RemoveRecord(db, tableName, columns, body.Record)
 	if err != nil {
 		error := fmt.Sprintf("handleDeleteRecord - %v", err)
 		log.Println(error)
@@ -97,7 +98,7 @@ func handleDeleteRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	result, err := GetTable(db, tableName)
+	result, err := sqlutils.GetTable(db, tableName)
 	if err != nil {
 		error := fmt.Sprintf("handleDeleteRecord - %v", err)
 		log.Println(error)
@@ -119,7 +120,7 @@ func handleInsertRecord(c *fiber.Ctx) error {
 		return err
 	}
 
-	db, err := ConnectToDb(body.Connect)
+	db, err := sqlutils.ConnectToMySQLDB(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleInsertRecord - %v", err)
 		log.Println(error)
@@ -127,7 +128,7 @@ func handleInsertRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	columns, err := GetColumns(db, tableName)
+	columns, err := sqlutils.GetColumns(db, tableName)
 	if err != nil {
 		error := fmt.Sprintf("handleInsertRecord - %v", err)
 		log.Println(error)
@@ -135,7 +136,7 @@ func handleInsertRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	_, err = AddRecord(db, tableName, columns, body.Record)
+	_, err = sqlutils.AddRecord(db, tableName, columns, body.Record)
 	if err != nil {
 		error := fmt.Sprintf("handleInsertRecord - %v", err)
 		log.Println(error)
@@ -143,7 +144,7 @@ func handleInsertRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	result, err := GetTable(db, tableName)
+	result, err := sqlutils.GetTable(db, tableName)
 	if err != nil {
 		error := fmt.Sprintf("handleInsertRecord - %v", err)
 		log.Println(error)
@@ -165,7 +166,7 @@ func handleEditRecord(c *fiber.Ctx) error {
 		return err
 	}
 
-	db, err := ConnectToDb(body.Connect)
+	db, err := sqlutils.ConnectToMySQLDB(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleEditRecord - %v", err)
 		log.Println(error)
@@ -173,7 +174,7 @@ func handleEditRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	err = EditRecord(db, tableName, body.RecordInfo.Column, body.RecordInfo.Value, body.Update.Column, body.Update.Value)
+	err = sqlutils.EditRecord(db, tableName, body.RecordInfo.Column, body.RecordInfo.Value, body.Update.Column, body.Update.Value)
 	if err != nil {
 		error := fmt.Sprintf("handleEditRecord - %v", err)
 		log.Println(error)
@@ -181,7 +182,7 @@ func handleEditRecord(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	result, err := GetTable(db, tableName)
+	result, err := sqlutils.GetTable(db, tableName)
 	if err != nil {
 		error := fmt.Sprintf("handleEditRecord - %v", err)
 		log.Println(error)
@@ -203,7 +204,7 @@ func handlePrimaryKeys(c *fiber.Ctx) error {
 		return err
 	}
 
-	db, err := ConnectToDb(body.Connect)
+	db, err := sqlutils.ConnectToMySQLDB(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handlePrimaryKeys - %v", err)
 		log.Println(error)
@@ -211,7 +212,7 @@ func handlePrimaryKeys(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	result, err := GetPrimaryKeys(db, body.Connect.DBName, tableName)
+	result, err := sqlutils.GetPrimaryKeys(db, body.Connect.DBName, tableName)
 	if err != nil {
 		error := fmt.Sprintf("handlePrimaryKeys - %v", err)
 		log.Println(error)
@@ -231,7 +232,7 @@ func handleDuplicateTable(c *fiber.Ctx) error {
 		return err
 	}
 
-	db, err := ConnectToDb(body.Connect)
+	db, err := sqlutils.ConnectToMySQLDB(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleDuplicateTable - %v", err)
 		log.Println(error)
@@ -239,7 +240,7 @@ func handleDuplicateTable(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	err = DuplicateTable(db, body.SourceTableName, body.NewTableName)
+	err = sqlutils.DuplicateTable(db, body.SourceTableName, body.NewTableName)
 	if err != nil {
 		error := fmt.Sprintf("handleDuplicateTable - %v", err)
 		log.Println(error)
@@ -247,7 +248,7 @@ func handleDuplicateTable(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	result, err := GetTables(db)
+	result, err := sqlutils.GetTables(db)
 	if err != nil {
 		error := fmt.Sprintf("handleDuplicateTable - %v", err)
 		log.Println(error)
@@ -269,7 +270,7 @@ func handleDeleteTable(c *fiber.Ctx) error {
 		return err
 	}
 
-	db, err := ConnectToDb(body.Connect)
+	db, err := sqlutils.ConnectToMySQLDB(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleDeleteTable - %v", err)
 		log.Println(error)
@@ -277,7 +278,7 @@ func handleDeleteTable(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	err = DeleteTable(db, tableName)
+	err = sqlutils.DeleteTable(db, tableName)
 	if err != nil {
 		error := fmt.Sprintf("handleDeleteTable - %v", err)
 		log.Println(error)
@@ -285,7 +286,7 @@ func handleDeleteTable(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	result, err := GetTables(db)
+	result, err := sqlutils.GetTables(db)
 	if err != nil {
 		error := fmt.Sprintf("handleDeleteTable - %v", err)
 		log.Println(error)
@@ -307,7 +308,7 @@ func handleRenameTable(c *fiber.Ctx) error {
 		return err
 	}
 
-	db, err := ConnectToDb(body.Connect)
+	db, err := sqlutils.ConnectToMySQLDB(body.Connect)
 	if err != nil {
 		error := fmt.Sprintf("handleRenameTable - %v", err)
 		log.Println(error)
@@ -315,7 +316,7 @@ func handleRenameTable(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	err = RenameTable(db, tableName, body.NewTableName)
+	err = sqlutils.RenameTable(db, tableName, body.NewTableName)
 	if err != nil {
 		error := fmt.Sprintf("handleRenameTable - %v", err)
 		log.Println(error)
@@ -323,7 +324,7 @@ func handleRenameTable(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": error})
 	}
 
-	result, err := GetTables(db)
+	result, err := sqlutils.GetTables(db)
 	if err != nil {
 		error := fmt.Sprintf("handleRenameTable - %v", err)
 		log.Println(error)

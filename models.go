@@ -1,23 +1,20 @@
 package main
 
-type ConnectIntent struct {
-	Addr   string `json:"address"`
-	DBName string `json:"dbName"`
-	User   string `json:"user"`
-	Passwd string `json:"password"`
-}
+import (
+	"github.com/sgsavu/sqlutils"
+)
 
 type RequestBody struct {
-	Connect ConnectIntent `json:"connect"`
+	Connect sqlutils.SQLConnectionInfo `json:"connect"`
 }
 
 type RecordRequestBody struct {
-	Connect ConnectIntent `json:"connect"`
-	Record  []interface{} `json:"record"`
+	Connect sqlutils.SQLConnectionInfo `json:"connect"`
+	Record  []interface{}              `json:"record"`
 }
 
 type EditRecordRequestBody struct {
-	Connect ConnectIntent `json:"connect"`
+	Connect sqlutils.SQLConnectionInfo `json:"connect"`
 	Update  struct {
 		Column string `json:"column"`
 		Value  string `json:"value"`
@@ -30,12 +27,12 @@ type EditRecordRequestBody struct {
 }
 
 type DuplicateTableRequestBody struct {
-	Connect         ConnectIntent `json:"connect"`
-	SourceTableName string        `json:"sourceTableName"`
-	NewTableName    string        `json:"newTableName"`
+	Connect         sqlutils.SQLConnectionInfo `json:"connect"`
+	SourceTableName string                     `json:"sourceTableName"`
+	NewTableName    string                     `json:"newTableName"`
 }
 
 type RenameTableRequestBody struct {
-	Connect      ConnectIntent `json:"connect"`
-	NewTableName string        `json:"newTableName"`
+	Connect      sqlutils.SQLConnectionInfo `json:"connect"`
+	NewTableName string                     `json:"newTableName"`
 }
