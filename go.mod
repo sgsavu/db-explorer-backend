@@ -1,4 +1,4 @@
-module mysql-visualizer-backend
+module db-explorer-backend
 
 go 1.22.5
 
