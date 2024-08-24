@@ -1,0 +1,66 @@
+name: Go
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: 1234
+          MYSQL_DATABASE: test
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.22.5'
+
+    - name: Wait for MySQL to be ready
+      run: |
+        until mysqladmin ping -h "127.0.0.1" --silent; do
+          echo 'Waiting for MySQL...'
+          sleep 5
+        done
+        echo 'MySQL is up and running!'
+
+    - name: Add and populate test table
+      run: |
+          mysql -h 127.0.0.1 -u root -p1234 -e "CREATE DATABASE IF NOT EXISTS test;"
+          mysql -h 127.0.0.1 -u root -p1234 test -e "CREATE TABLE IF NOT EXISTS orders (order_id INT PRIMARY KEY, order_date DATE, customer_id INT);"
+          mysql -h 127.0.0.1 -u root -p1234 test -e "INSERT INTO orders (order_id, order_date, customer_id) VALUES (1, '2024-08-24', 123);"
+
+
+    - name: Build and run API
+      run: |
+        go build -o api-server .
+        nohup ./api-server &
+
+    - name: Clone API testing framework
+      run: git clone https://github.com/sgsavu/rest-pilot.git
+
+    - name: Build testing framework
+      run: |
+        cd rest-pilot
+        go build .
+        mv rest-pilot ../rest-pilot-bin
+
+    - name: Run testing framework on tests
+      run: ./rest-pilot-bin

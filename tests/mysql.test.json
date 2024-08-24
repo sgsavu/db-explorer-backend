@@ -1,0 +1,760 @@
+[
+    {
+        "name": "getTables",
+        "timeout": 5,
+        "request": {
+            "method": "POST",
+            "path": "/v1/tables/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                }
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    "orders"
+                ]
+            }
+        }
+    },
+    {
+        "name": "getColumns",
+        "timeout": 5,
+        "request": {
+            "method": "POST",
+            "path": "/v1/tables/orders/columns/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                }
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    "order_id",
+                    "order_date",
+                    "customer_id"
+                ]
+            }
+        }
+    },
+    {
+        "name": "getColumns - non-existent table",
+        "timeout": 5,
+        "request": {
+            "method": "POST",
+            "path": "/v1/tables/table-123/columns/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                }
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleColumns - GetColumns - IsTableExistent - query: Error 1146 (42S02): Table 'test.table-123' doesn't exist"
+            }
+        }
+    },
+    {
+        "name": "getRecords",
+        "timeout": 5,
+        "request": {
+            "method": "POST",
+            "path": "/v1/tables/orders/records/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                }
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    {
+                        "customer_id": 123,
+                        "order_date": "2024-08-24",
+                        "order_id": 1
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "name": "getRecords - non-existent table",
+        "timeout": 5,
+        "request": {
+            "method": "POST",
+            "path": "/v1/tables/table-123/records/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                }
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleTable - GetTable - query: Error 1146 (42S02): Table 'test.table-123' doesn't exist"
+            }
+        }
+    },
+    {
+        "name": "getPrimaryKeys",
+        "timeout": 5,
+        "request": {
+            "method": "POST",
+            "path": "/v1/tables/orders/primary-keys/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                }
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    "order_id"
+                ]
+            }
+        }
+    },
+    {
+        "name": "getPrimaryKeys - non-existent table",
+        "timeout": 5,
+        "request": {
+            "method": "POST",
+            "path": "/v1/tables/table-123/primary-keys/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                }
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handlePrimaryKeys - GetColumns - IsTableExistent - query: Error 1146 (42S02): Table 'test.table-123' doesn't exist"
+            }
+        }
+    },
+    {
+        "name": "duplicateTable",
+        "timeout": 5,
+        "request": {
+            "method": "PUT",
+            "path": "/v1/tables/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "sourceTableName": "orders",
+                "newTableName": "orders-copy"
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    "orders",
+                    "orders-copy"
+                ]
+            }
+        }
+    },
+    {
+        "name": "duplicateTable - non-existent table",
+        "timeout": 5,
+        "request": {
+            "method": "PUT",
+            "path": "/v1/tables/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "sourceTableName": "table-123",
+                "newTableName": "orders-copy"
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleDuplicateTable - DuplicateTable: failed to create table structure: Error 1146 (42S02): Table 'test.table-123' doesn't exist"
+            }
+        }
+    },
+    {
+        "name": "duplicateTable - already existing table name",
+        "timeout": 5,
+        "request": {
+            "method": "PUT",
+            "path": "/v1/tables/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "sourceTableName": "orders",
+                "newTableName": "orders-copy"
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleDuplicateTable - DuplicateTable: failed to create table structure: Error 1050 (42S01): Table 'orders-copy' already exists"
+            }
+        }
+    },
+    {
+        "name": "renameTable",
+        "timeout": 5,
+        "request": {
+            "method": "PATCH",
+            "path": "/v1/tables/orders-copy/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "newTableName": "orders-copy-2"
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    "orders",
+                    "orders-copy-2"
+                ]
+            }
+        }
+    },
+    {
+        "name": "renameTable - non-existent table",
+        "timeout": 5,
+        "request": {
+            "method": "PATCH",
+            "path": "/v1/tables/table-123/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "newTableName": "orders-copy-2"
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleRenameTable - RenameTable: could not rename table from table-123 to orders-copy-2: Error 1050 (42S01): Table 'orders-copy-2' already exists"
+            }
+        }
+    },
+    {
+        "name": "renameTable - already existing new name",
+        "timeout": 5,
+        "request": {
+            "method": "PATCH",
+            "path": "/v1/tables/orders-copy/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "newTableName": "orders-copy-2"
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleRenameTable - RenameTable: could not rename table from orders-copy to orders-copy-2: Error 1050 (42S01): Table 'orders-copy-2' already exists"
+            }
+        }
+    },
+    {
+        "name": "insertRecord",
+        "timeout": 5,
+        "request": {
+            "method": "PUT",
+            "path": "/v1/tables/orders-copy-2/records/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "record": [
+                    10,
+                    "1999-04-05",
+                    444
+                ]
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    {
+                        "customer_id": 123,
+                        "order_date": "2024-08-24",
+                        "order_id": 1
+                    },
+                    {
+                        "customer_id": 444,
+                        "order_date": "1999-04-05",
+                        "order_id": 10
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "name": "insertRecord - invalid number of columns",
+        "timeout": 5,
+        "request": {
+            "method": "PUT",
+            "path": "/v1/tables/orders-copy-2/records/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "record": [
+                    "1999-04-05"
+                ]
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleInsertRecord - AddRecord: invalid columns or values length"
+            }
+        }
+    },
+    {
+        "name": "editRecord",
+        "timeout": 5,
+        "request": {
+            "method": "PATCH",
+            "path": "/v1/tables/orders-copy-2/records/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "recordInfo": {
+                    "column": "order_id",
+                    "value": 10
+                },
+                "update": {
+                    "column": "order_date",
+                    "value": "2001-09-11"
+                }
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    {
+                        "customer_id": 123,
+                        "order_date": "2024-08-24",
+                        "order_id": 1
+                    },
+                    {
+                        "customer_id": 444,
+                        "order_date": "2001-09-11",
+                        "order_id": 10
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "name": "editRecord - non-existent record",
+        "timeout": 5,
+        "request": {
+            "method": "PATCH",
+            "path": "/v1/tables/orders-copy-2/records/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "recordInfo": {
+                    "column": "order_id",
+                    "value": 1234
+                },
+                "update": {
+                    "column": "order_date",
+                    "value": "2001-09-11"
+                }
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleEditRecord - EditRecord - no rows were updated"
+            }
+        }
+    },
+    {
+        "name": "deleteRecord",
+        "timeout": 5,
+        "request": {
+            "method": "DELETE",
+            "path": "/v1/tables/orders-copy-2/records/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "record": [
+                    10,
+                    "1999-04-05",
+                    444
+                ]
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    {
+                        "customer_id": 123,
+                        "order_date": "2024-08-24",
+                        "order_id": 1
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "name": "deleteRecord - non-existent table",
+        "timeout": 5,
+        "request": {
+            "method": "DELETE",
+            "path": "/v1/tables/table-123/records/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "record": [
+                    1,
+                    "2024-08-24",
+                    123
+                ]
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleDeleteRecord - RemoveRecord: error grabbing primary keys: GetColumns - IsTableExistent - query: Error 1146 (42S02): Table 'test.table-123' doesn't exist"
+            }
+        }
+    },
+    {
+        "name": "deleteRecord - non-existent record",
+        "timeout": 5,
+        "request": {
+            "method": "DELETE",
+            "path": "/v1/tables/orders-copy-2/records/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "record": [
+                    3,
+                    "2024-08-24",
+                    123
+                ]
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleDeleteRecord - RemoveRecord: non-existent record(s)"
+            }
+        }
+    },
+    {
+        "name": "deleteTable",
+        "timeout": 5,
+        "request": {
+            "method": "DELETE",
+            "path": "/v1/tables/orders-copy-2/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                }
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    "orders"
+                ]
+            }
+        }
+    },
+    {
+        "name": "deleteTable - non-existent table",
+        "timeout": 5,
+        "request": {
+            "method": "DELETE",
+            "path": "/v1/tables/table-123/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                }
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleDeleteTable - DeleteTable: failed to delete table table-123: Error 1051 (42S02): Unknown table 'test.table-123'"
+            }
+        }
+    }
+]

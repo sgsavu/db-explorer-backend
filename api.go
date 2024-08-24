@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
-func initAPI() error {
+func initAPI(port *string) error {
 	app := fiber.New()
 	app.Use(cors.New())
 
@@ -13,13 +15,17 @@ func initAPI() error {
 
 	v1.Post("/tables/", handleTables)
 	v1.Put("/tables/", handleDuplicateTable)
+
 	v1.Delete("/tables/:name/", handleDeleteTable)
 	v1.Patch("/tables/:name/", handleRenameTable)
+
+	v1.Post("/tables/:name/columns/", handleColumns)
 	v1.Post("/tables/:name/primary-keys/", handlePrimaryKeys)
-	v1.Post("/tables/:name/records/", handleTable)
+	v1.Post("/tables/:name/records/", handleRecords)
+
 	v1.Put("/tables/:name/records/", handleInsertRecord)
-	v1.Delete("/tables/:name/records/", handleDeleteRecord)
+	v1.Delete("/tables/:name/records/", handleRemoveRecord)
 	v1.Patch("/tables/:name/records/", handleEditRecord)
 
-	return app.Listen(":3000")
+	return app.Listen(fmt.Sprintf(":%s", *port))
 }
