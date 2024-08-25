@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/sgsavu/sqlutils/v2"
+	"github.com/sgsavu/sqlutils/v3"
 )
 
 type RequestBody struct {
@@ -10,19 +10,16 @@ type RequestBody struct {
 
 type RecordRequestBody struct {
 	ConnectionInfo sqlutils.SQLConnectionInfo `json:"connectionInfo"`
-	Record         []interface{}              `json:"record"`
+	Record         sqlutils.TableRecord       `json:"record"`
 }
 
 type EditRecordRequestBody struct {
 	ConnectionInfo sqlutils.SQLConnectionInfo `json:"connectionInfo"`
+	Record         sqlutils.TableRecord       `json:"record"`
 	Update         struct {
 		Column string `json:"column"`
 		Value  any    `json:"value"`
 	} `json:"update"`
-	RecordInfo struct {
-		Column string `json:"column"`
-		Value  any    `json:"value"`
-	} `json:"recordInfo"`
 }
 
 type DuplicateTableRequestBody struct {

@@ -1,0 +1,265 @@
+[
+    {
+        "name": "insertRecord",
+        "timeout": 5,
+        "request": {
+            "method": "PUT",
+            "path": "/v1/tables/records_test/records/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "record": {
+                    "order_id": 10,
+                    "order_date": "1999-04-05",
+                    "customer_id": 444
+                }
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    {
+                        "customer_id": 444,
+                        "order_date": "1999-04-05",
+                        "order_id": 10
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "name": "insertRecord - invalid number of columns",
+        "timeout": 5,
+        "request": {
+            "method": "PUT",
+            "path": "/v1/tables/records_test/records/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "record": {
+                    "order_date": "1999-04-05"
+                }
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleInsertRecord - github.com/sgsavu/sqlutils/v3.InsertRecord - Error 1364 (HY000): Field 'order_id' doesn't have a default value"
+            }
+        }
+    },
+    {
+        "name": "editRecord",
+        "timeout": 5,
+        "request": {
+            "method": "PATCH",
+            "path": "/v1/tables/records_test/records/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "record": {
+                    "customer_id": 444,
+                    "order_date": "1999-04-05",
+                    "order_id": 10
+                },
+                "update": {
+                    "column": "order_date",
+                    "value": "2001-09-11"
+                }
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    {
+                        "customer_id": 444,
+                        "order_date": "2001-09-11",
+                        "order_id": 10
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "name": "editRecord - non-existent record",
+        "timeout": 5,
+        "request": {
+            "method": "PATCH",
+            "path": "/v1/tables/records_test/records/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "record": {
+                    "customer_id": 123,
+                    "order_date": "2024-08-24",
+                    "order_id": 99999
+                },
+                "update": {
+                    "column": "order_date",
+                    "value": "2001-09-11"
+                }
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleEditRecord - github.com/sgsavu/sqlutils/v3.EditRecord - no rows were updated"
+            }
+        }
+    },
+    {
+        "name": "deleteRecord",
+        "timeout": 5,
+        "request": {
+            "method": "DELETE",
+            "path": "/v1/tables/records_test/records/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "record": {
+                    "order_id": 10,
+                    "order_date": "1999-04-05",
+                    "customer_id": 444
+                }
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": []
+            }
+        }
+    },
+    {
+        "name": "deleteRecord - non-existent table",
+        "timeout": 5,
+        "request": {
+            "method": "DELETE",
+            "path": "/v1/tables/records_testtttt/records/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "record": {
+                    "customer_id": 123,
+                    "order_date": "2024-08-24",
+                    "order_id": 1
+                }
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleDeleteRecord - github.com/sgsavu/sqlutils/v3.RemoveRecord - error grabbing primary keys: GetColumns - IsTableExistent - query: Error 1146 (42S02): Table 'test.records_testtttt' doesn't exist"
+            }
+        }
+    },
+    {
+        "name": "deleteRecord - non-existent record",
+        "timeout": 5,
+        "request": {
+            "method": "DELETE",
+            "path": "/v1/tables/records_test/records/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "record": {
+                    "customer_id": 123,
+                    "order_date": "2024-08-24",
+                    "order_id": 3
+                }
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleDeleteRecord - github.com/sgsavu/sqlutils/v3.RemoveRecord - record does not exist"
+            }
+        }
+    }
+]

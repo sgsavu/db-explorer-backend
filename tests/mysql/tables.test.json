@@ -1,0 +1,265 @@
+[
+    {
+        "name": "duplicateTable",
+        "timeout": 5,
+        "request": {
+            "method": "PUT",
+            "path": "/v1/tables/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "sourceTableName": "tables_test",
+                "newTableName": "tables_test_copy"
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    "getters_test",
+                    "records_test",
+                    "tables_test",
+                    "tables_test_copy"
+                ]
+            }
+        }
+    },
+    {
+        "name": "duplicateTable - non-existent table",
+        "timeout": 5,
+        "request": {
+            "method": "PUT",
+            "path": "/v1/tables/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "sourceTableName": "table-123",
+                "newTableName": "tables_test_copy"
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleDuplicateTable - DuplicateTable: failed to create table structure: Error 1146 (42S02): Table 'test.table-123' doesn't exist"
+            }
+        }
+    },
+    {
+        "name": "duplicateTable - already existing table name",
+        "timeout": 5,
+        "request": {
+            "method": "PUT",
+            "path": "/v1/tables/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "sourceTableName": "tables_test",
+                "newTableName": "tables_test_copy"
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleDuplicateTable - DuplicateTable: failed to create table structure: Error 1050 (42S01): Table 'tables_test_copy' already exists"
+            }
+        }
+    },
+    {
+        "name": "renameTable",
+        "timeout": 5,
+        "request": {
+            "method": "PATCH",
+            "path": "/v1/tables/tables_test_copy/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "newTableName": "tables_test_copy_renamed"
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    "getters_test",
+                    "records_test",
+                    "tables_test",
+                    "tables_test_copy_renamed"
+                ]
+            }
+        }
+    },
+    {
+        "name": "renameTable - non-existent table",
+        "timeout": 5,
+        "request": {
+            "method": "PATCH",
+            "path": "/v1/tables/table-123/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "newTableName": "tables_test_copy_2"
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleRenameTable - RenameTable: could not rename table from table-123 to tables_test_copy_2: Error 1146 (42S02): Table 'test.table-123' doesn't exist"
+            }
+        }
+    },
+    {
+        "name": "renameTable - already existing new name",
+        "timeout": 5,
+        "request": {
+            "method": "PATCH",
+            "path": "/v1/tables/tables_test/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                },
+                "newTableName": "tables_test_copy_renamed"
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleRenameTable - RenameTable: could not rename table from tables_test to tables_test_copy_renamed: Error 1050 (42S01): Table 'tables_test_copy_renamed' already exists"
+            }
+        }
+    },
+    {
+        "name": "deleteTable",
+        "timeout": 5,
+        "request": {
+            "method": "DELETE",
+            "path": "/v1/tables/tables_test_copy_renamed/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                }
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    "getters_test",
+                    "records_test",
+                    "tables_test"
+                ]
+            }
+        }
+    },
+    {
+        "name": "deleteTable - non-existent table",
+        "timeout": 5,
+        "request": {
+            "method": "DELETE",
+            "path": "/v1/tables/table-123/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                }
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleDeleteTable - DeleteTable: failed to delete table table-123: Error 1051 (42S02): Unknown table 'test.table-123'"
+            }
+        }
+    }
+]

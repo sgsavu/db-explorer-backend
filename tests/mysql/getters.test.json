@@ -1,0 +1,228 @@
+[
+    {
+        "name": "getTables",
+        "timeout": 5,
+        "request": {
+            "method": "POST",
+            "path": "/v1/tables/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                }
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    "getters_test",
+                    "records_test",
+                    "tables_test"
+                ]
+            }
+        }
+    },
+    {
+        "name": "getColumns",
+        "timeout": 5,
+        "request": {
+            "method": "POST",
+            "path": "/v1/tables/getters_test/columns/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                }
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    "order_id",
+                    "order_date",
+                    "customer_id"
+                ]
+            }
+        }
+    },
+    {
+        "name": "getColumns - non-existent table",
+        "timeout": 5,
+        "request": {
+            "method": "POST",
+            "path": "/v1/tables/table-123/columns/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                }
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleColumns - GetColumns - IsTableExistent - query: Error 1146 (42S02): Table 'test.table-123' doesn't exist"
+            }
+        }
+    },
+    {
+        "name": "getRecords",
+        "timeout": 5,
+        "request": {
+            "method": "POST",
+            "path": "/v1/tables/getters_test/records/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                }
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    {
+                        "customer_id": 123,
+                        "order_date": "2024-08-24",
+                        "order_id": 1
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "name": "getRecords - non-existent table",
+        "timeout": 5,
+        "request": {
+            "method": "POST",
+            "path": "/v1/tables/table-123/records/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                }
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handleTable - GetTable - query: Error 1146 (42S02): Table 'test.table-123' doesn't exist"
+            }
+        }
+    },
+    {
+        "name": "getPrimaryKeys",
+        "timeout": 5,
+        "request": {
+            "method": "POST",
+            "path": "/v1/tables/getters_test/primary-keys/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                }
+            }
+        },
+        "response": {
+            "status_code": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "result": [
+                    "order_id"
+                ]
+            }
+        }
+    },
+    {
+        "name": "getPrimaryKeys - non-existent table",
+        "timeout": 5,
+        "request": {
+            "method": "POST",
+            "path": "/v1/tables/table-123/primary-keys/",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "connectionInfo": {
+                    "host": "127.0.0.1",
+                    "port": "3306",
+                    "dbName": "test",
+                    "user": "root",
+                    "password": "1234",
+                    "type": "mysql"
+                }
+            }
+        },
+        "response": {
+            "status_code": 500,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "error": "handlePrimaryKeys - GetColumns - IsTableExistent - query: Error 1146 (42S02): Table 'test.table-123' doesn't exist"
+            }
+        }
+    }
+]

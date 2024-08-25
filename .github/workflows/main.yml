@@ -44,8 +44,10 @@ jobs:
     - name: Add and populate test table
       run: |
           mysql -h 127.0.0.1 -u root -p1234 -e "CREATE DATABASE IF NOT EXISTS test;"
-          mysql -h 127.0.0.1 -u root -p1234 test -e "CREATE TABLE IF NOT EXISTS orders (order_id INT PRIMARY KEY, order_date DATE, customer_id INT);"
-          mysql -h 127.0.0.1 -u root -p1234 test -e "INSERT INTO orders (order_id, order_date, customer_id) VALUES (1, '2024-08-24', 123);"
+          mysql -h 127.0.0.1 -u root -p1234 test -e "CREATE TABLE IF NOT EXISTS getters_test (order_id INT PRIMARY KEY, order_date DATE, customer_id INT);"
+          mysql -h 127.0.0.1 -u root -p1234 test -e "CREATE TABLE tables_test LIKE getters_test;"
+          mysql -h 127.0.0.1 -u root -p1234 test -e "CREATE TABLE records_test LIKE getters_test;"
+          mysql -h 127.0.0.1 -u root -p1234 test -e "INSERT INTO getters_test (order_id, order_date, customer_id) VALUES (1, '2024-08-24', 123);"
 
 
     - name: Build and run API

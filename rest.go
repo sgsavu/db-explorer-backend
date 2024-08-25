@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/sgsavu/sqlutils/v2"
+	"github.com/sgsavu/sqlutils/v3"
 )
 
 func handleTables(c *fiber.Ctx) error {
@@ -231,43 +231,6 @@ func handleRenameTable(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"result": result})
 }
 
-func handleRemoveRecord(c *fiber.Ctx) error {
-	tableName := c.Params("name")
-
-	body := new(RecordRequestBody)
-	if err := c.BodyParser(body); err != nil {
-		return err
-	}
-
-	db, err := sqlutils.ConnectDB(&body.ConnectionInfo)
-	if err != nil {
-		error := fmt.Sprintf("handleDeleteRecord - %v", err)
-		log.Println(error)
-		c.Status(fiber.StatusInternalServerError)
-		return c.JSON(fiber.Map{"error": error})
-	}
-	defer db.Close()
-
-	_, err = sqlutils.RemoveRecord(db, body.ConnectionInfo.DBName, tableName, body.ConnectionInfo.Type, body.Record)
-	if err != nil {
-		error := fmt.Sprintf("handleDeleteRecord - %v", err)
-		log.Println(error)
-		c.Status(fiber.StatusInternalServerError)
-		return c.JSON(fiber.Map{"error": error})
-	}
-
-	result, err := sqlutils.GetTable(db, tableName, body.ConnectionInfo.Type)
-	if err != nil {
-		error := fmt.Sprintf("handleDeleteRecord - %v", err)
-		log.Println(error)
-		c.Status(fiber.StatusInternalServerError)
-		return c.JSON(fiber.Map{"error": error})
-	}
-
-	c.Status(fiber.StatusOK)
-	return c.JSON(fiber.Map{"result": result})
-}
-
 func handleInsertRecord(c *fiber.Ctx) error {
 	tableName := c.Params("name")
 
@@ -285,15 +248,7 @@ func handleInsertRecord(c *fiber.Ctx) error {
 	}
 	defer db.Close()
 
-	columns, err := sqlutils.GetColumns(db, tableName, body.ConnectionInfo.Type)
-	if err != nil {
-		error := fmt.Sprintf("handleInsertRecord - %v", err)
-		log.Println(error)
-		c.Status(fiber.StatusInternalServerError)
-		return c.JSON(fiber.Map{"error": error})
-	}
-
-	_, err = sqlutils.InsertRecord(db, tableName, columns, body.Record, body.ConnectionInfo.Type)
+	_, err = sqlutils.InsertRecord(db, tableName, body.Record, body.ConnectionInfo.Type)
 	if err != nil {
 		error := fmt.Sprintf("handleInsertRecord - %v", err)
 		log.Println(error)
@@ -330,7 +285,7 @@ func handleEditRecord(c *fiber.Ctx) error {
 	}
 	defer db.Close()
 
-	err = sqlutils.EditRecord(db, tableName, body.RecordInfo.Column, body.RecordInfo.Value, body.Update.Column, body.Update.Value, body.ConnectionInfo.Type)
+	err = sqlutils.EditRecord(db, tableName, body.Record, body.Update.Column, body.Update.Value, body.ConnectionInfo.Type)
 	if err != nil {
 		error := fmt.Sprintf("handleEditRecord - %v", err)
 		log.Println(error)
@@ -341,6 +296,43 @@ func handleEditRecord(c *fiber.Ctx) error {
 	result, err := sqlutils.GetTable(db, tableName, body.ConnectionInfo.Type)
 	if err != nil {
 		error := fmt.Sprintf("handleEditRecord - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	c.Status(fiber.StatusOK)
+	return c.JSON(fiber.Map{"result": result})
+}
+
+func handleRemoveRecord(c *fiber.Ctx) error {
+	tableName := c.Params("name")
+
+	body := new(RecordRequestBody)
+	if err := c.BodyParser(body); err != nil {
+		return err
+	}
+
+	db, err := sqlutils.ConnectDB(&body.ConnectionInfo)
+	if err != nil {
+		error := fmt.Sprintf("handleDeleteRecord - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+	defer db.Close()
+
+	_, err = sqlutils.RemoveRecord(db, body.ConnectionInfo.DBName, tableName, body.ConnectionInfo.Type, body.Record)
+	if err != nil {
+		error := fmt.Sprintf("handleDeleteRecord - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	result, err := sqlutils.GetTable(db, tableName, body.ConnectionInfo.Type)
+	if err != nil {
+		error := fmt.Sprintf("handleDeleteRecord - %v", err)
 		log.Println(error)
 		c.Status(fiber.StatusInternalServerError)
 		return c.JSON(fiber.Map{"error": error})
