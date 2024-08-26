@@ -27,5 +27,7 @@ func initAPI(port *string) error {
 	v1.Patch("/tables/:name/records/", handleEditRecord)
 	v1.Delete("/tables/:name/records/", handleRemoveRecord)
 
+	v1.Post("/tables/:name/records/duplicate/", handleDuplicateRecord)
+
 	return app.Listen(fmt.Sprintf(":%s", *port))
 }

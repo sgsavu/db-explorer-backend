@@ -290,6 +290,48 @@ func handleInsertRecord(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"result": result})
 }
 
+func handleDuplicateRecord(c *fiber.Ctx) error {
+	tableName := c.Params("name")
+
+	connectionInfo := new(sqlutils.DBConnection)
+	if err := c.ReqHeaderParser(connectionInfo); err != nil {
+		return err
+	}
+
+	body := new(RecordRequestBody)
+	if err := c.BodyParser(body); err != nil {
+		return err
+	}
+
+	db, err := sqlutils.ConnectDB(connectionInfo)
+	if err != nil {
+		error := fmt.Sprintf("handleDuplicateRecord - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+	defer db.Close()
+
+	err = sqlutils.DuplicateRecord(db, connectionInfo.Name, tableName, body.Record, connectionInfo.Type)
+	if err != nil {
+		error := fmt.Sprintf("handleDuplicateRecord - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	result, err := sqlutils.GetTable(db, tableName, connectionInfo.Type)
+	if err != nil {
+		error := fmt.Sprintf("handleDuplicateRecord - %v", err)
+		log.Println(error)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"error": error})
+	}
+
+	c.Status(fiber.StatusOK)
+	return c.JSON(fiber.Map{"result": result})
+}
+
 func handleEditRecord(c *fiber.Ctx) error {
 	tableName := c.Params("name")
 
