@@ -3,20 +3,18 @@
         "name": "insertRecord",
         "timeout": 5,
         "request": {
-            "method": "PUT",
+            "method": "POST",
             "path": "/v1/tables/records_test/records/",
             "headers": {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "X-Db-Host": "127.0.0.1",
+                "X-Db-Port": "3306",
+                "X-Db-Name": "test",
+                "X-Db-User": "root",
+                "X-Db-Pass": "1234",
+                "X-Db-Type": "mysql"
             },
             "body": {
-                "connectionInfo": {
-                    "host": "127.0.0.1",
-                    "port": "3306",
-                    "dbName": "test",
-                    "user": "root",
-                    "password": "1234",
-                    "type": "mysql"
-                },
                 "record": {
                     "order_id": 10,
                     "order_date": "1999-04-05",
@@ -44,20 +42,18 @@
         "name": "insertRecord - invalid number of columns",
         "timeout": 5,
         "request": {
-            "method": "PUT",
+            "method": "POST",
             "path": "/v1/tables/records_test/records/",
             "headers": {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "X-Db-Host": "127.0.0.1",
+                "X-Db-Port": "3306",
+                "X-Db-Name": "test",
+                "X-Db-User": "root",
+                "X-Db-Pass": "1234",
+                "X-Db-Type": "mysql"
             },
             "body": {
-                "connectionInfo": {
-                    "host": "127.0.0.1",
-                    "port": "3306",
-                    "dbName": "test",
-                    "user": "root",
-                    "password": "1234",
-                    "type": "mysql"
-                },
                 "record": {
                     "order_date": "1999-04-05"
                 }
@@ -69,7 +65,7 @@
                 "Content-Type": "application/json"
             },
             "body": {
-                "error": "handleInsertRecord - github.com/sgsavu/sqlutils/v3.InsertRecord - Error 1364 (HY000): Field 'order_id' doesn't have a default value"
+                "error": "handleInsertRecord - github.com/sgsavu/sqlutils/v4.InsertRecord - Error 1364 (HY000): Field 'order_id' doesn't have a default value"
             }
         }
     },
@@ -80,17 +76,15 @@
             "method": "PATCH",
             "path": "/v1/tables/records_test/records/",
             "headers": {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "X-Db-Host": "127.0.0.1",
+                "X-Db-Port": "3306",
+                "X-Db-Name": "test",
+                "X-Db-User": "root",
+                "X-Db-Pass": "1234",
+                "X-Db-Type": "mysql"
             },
             "body": {
-                "connectionInfo": {
-                    "host": "127.0.0.1",
-                    "port": "3306",
-                    "dbName": "test",
-                    "user": "root",
-                    "password": "1234",
-                    "type": "mysql"
-                },
                 "record": {
                     "customer_id": 444,
                     "order_date": "1999-04-05",
@@ -125,17 +119,15 @@
             "method": "PATCH",
             "path": "/v1/tables/records_test/records/",
             "headers": {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "X-Db-Host": "127.0.0.1",
+                "X-Db-Port": "3306",
+                "X-Db-Name": "test",
+                "X-Db-User": "root",
+                "X-Db-Pass": "1234",
+                "X-Db-Type": "mysql"
             },
             "body": {
-                "connectionInfo": {
-                    "host": "127.0.0.1",
-                    "port": "3306",
-                    "dbName": "test",
-                    "user": "root",
-                    "password": "1234",
-                    "type": "mysql"
-                },
                 "record": {
                     "customer_id": 123,
                     "order_date": "2024-08-24",
@@ -153,7 +145,7 @@
                 "Content-Type": "application/json"
             },
             "body": {
-                "error": "handleEditRecord - github.com/sgsavu/sqlutils/v3.EditRecord - no rows were updated"
+                "error": "handleEditRecord - github.com/sgsavu/sqlutils/v4.EditRecord - no rows were updated"
             }
         }
     },
@@ -164,17 +156,15 @@
             "method": "DELETE",
             "path": "/v1/tables/records_test/records/",
             "headers": {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "X-Db-Host": "127.0.0.1",
+                "X-Db-Port": "3306",
+                "X-Db-Name": "test",
+                "X-Db-User": "root",
+                "X-Db-Pass": "1234",
+                "X-Db-Type": "mysql"
             },
             "body": {
-                "connectionInfo": {
-                    "host": "127.0.0.1",
-                    "port": "3306",
-                    "dbName": "test",
-                    "user": "root",
-                    "password": "1234",
-                    "type": "mysql"
-                },
                 "record": {
                     "order_id": 10,
                     "order_date": "1999-04-05",
@@ -199,17 +189,15 @@
             "method": "DELETE",
             "path": "/v1/tables/records_testtttt/records/",
             "headers": {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "X-Db-Host": "127.0.0.1",
+                "X-Db-Port": "3306",
+                "X-Db-Name": "test",
+                "X-Db-User": "root",
+                "X-Db-Pass": "1234",
+                "X-Db-Type": "mysql"
             },
             "body": {
-                "connectionInfo": {
-                    "host": "127.0.0.1",
-                    "port": "3306",
-                    "dbName": "test",
-                    "user": "root",
-                    "password": "1234",
-                    "type": "mysql"
-                },
                 "record": {
                     "customer_id": 123,
                     "order_date": "2024-08-24",
@@ -223,7 +211,7 @@
                 "Content-Type": "application/json"
             },
             "body": {
-                "error": "handleDeleteRecord - github.com/sgsavu/sqlutils/v3.RemoveRecord - error grabbing primary keys: GetColumns - IsTableExistent - query: Error 1146 (42S02): Table 'test.records_testtttt' doesn't exist"
+                "error": "handleDeleteRecord - github.com/sgsavu/sqlutils/v4.RemoveRecord - error grabbing primary keys: GetColumns - IsTableExistent - query: Error 1146 (42S02): Table 'test.records_testtttt' doesn't exist"
             }
         }
     },
@@ -234,17 +222,15 @@
             "method": "DELETE",
             "path": "/v1/tables/records_test/records/",
             "headers": {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "X-Db-Host": "127.0.0.1",
+                "X-Db-Port": "3306",
+                "X-Db-Name": "test",
+                "X-Db-User": "root",
+                "X-Db-Pass": "1234",
+                "X-Db-Type": "mysql"
             },
             "body": {
-                "connectionInfo": {
-                    "host": "127.0.0.1",
-                    "port": "3306",
-                    "dbName": "test",
-                    "user": "root",
-                    "password": "1234",
-                    "type": "mysql"
-                },
                 "record": {
                     "customer_id": 123,
                     "order_date": "2024-08-24",
@@ -258,7 +244,7 @@
                 "Content-Type": "application/json"
             },
             "body": {
-                "error": "handleDeleteRecord - github.com/sgsavu/sqlutils/v3.RemoveRecord - record does not exist"
+                "error": "handleDeleteRecord - github.com/sgsavu/sqlutils/v4.RemoveRecord - record does not exist"
             }
         }
     }

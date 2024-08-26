@@ -3,20 +3,16 @@
         "name": "getTables",
         "timeout": 5,
         "request": {
-            "method": "POST",
+            "method": "GET",
             "path": "/v1/tables/",
             "headers": {
-                "Content-Type": "application/json"
-            },
-            "body": {
-                "connectionInfo": {
-                    "host": "127.0.0.1",
-                    "port": "3306",
-                    "dbName": "test",
-                    "user": "root",
-                    "password": "1234",
-                    "type": "mysql"
-                }
+                "Content-Type": "application/json",
+                "X-Db-Host": "127.0.0.1",
+                "X-Db-Port": "3306",
+                "X-Db-Name": "test",
+                "X-Db-User": "root",
+                "X-Db-Pass": "1234",
+                "X-Db-Type": "mysql"
             }
         },
         "response": {
@@ -37,20 +33,16 @@
         "name": "getColumns",
         "timeout": 5,
         "request": {
-            "method": "POST",
+            "method": "GET",
             "path": "/v1/tables/getters_test/columns/",
             "headers": {
-                "Content-Type": "application/json"
-            },
-            "body": {
-                "connectionInfo": {
-                    "host": "127.0.0.1",
-                    "port": "3306",
-                    "dbName": "test",
-                    "user": "root",
-                    "password": "1234",
-                    "type": "mysql"
-                }
+                "Content-Type": "application/json",
+                "X-Db-Host": "127.0.0.1",
+                "X-Db-Port": "3306",
+                "X-Db-Name": "test",
+                "X-Db-User": "root",
+                "X-Db-Pass": "1234",
+                "X-Db-Type": "mysql"
             }
         },
         "response": {
@@ -71,20 +63,16 @@
         "name": "getColumns - non-existent table",
         "timeout": 5,
         "request": {
-            "method": "POST",
+            "method": "GET",
             "path": "/v1/tables/table-123/columns/",
             "headers": {
-                "Content-Type": "application/json"
-            },
-            "body": {
-                "connectionInfo": {
-                    "host": "127.0.0.1",
-                    "port": "3306",
-                    "dbName": "test",
-                    "user": "root",
-                    "password": "1234",
-                    "type": "mysql"
-                }
+                "Content-Type": "application/json",
+                "X-Db-Host": "127.0.0.1",
+                "X-Db-Port": "3306",
+                "X-Db-Name": "test",
+                "X-Db-User": "root",
+                "X-Db-Pass": "1234",
+                "X-Db-Type": "mysql"
             }
         },
         "response": {
@@ -101,20 +89,16 @@
         "name": "getRecords",
         "timeout": 5,
         "request": {
-            "method": "POST",
+            "method": "GET",
             "path": "/v1/tables/getters_test/records/",
             "headers": {
-                "Content-Type": "application/json"
-            },
-            "body": {
-                "connectionInfo": {
-                    "host": "127.0.0.1",
-                    "port": "3306",
-                    "dbName": "test",
-                    "user": "root",
-                    "password": "1234",
-                    "type": "mysql"
-                }
+                "Content-Type": "application/json",
+                "X-Db-Host": "127.0.0.1",
+                "X-Db-Port": "3306",
+                "X-Db-Name": "test",
+                "X-Db-User": "root",
+                "X-Db-Pass": "1234",
+                "X-Db-Type": "mysql"
             }
         },
         "response": {
@@ -137,20 +121,16 @@
         "name": "getRecords - non-existent table",
         "timeout": 5,
         "request": {
-            "method": "POST",
+            "method": "GET",
             "path": "/v1/tables/table-123/records/",
             "headers": {
-                "Content-Type": "application/json"
-            },
-            "body": {
-                "connectionInfo": {
-                    "host": "127.0.0.1",
-                    "port": "3306",
-                    "dbName": "test",
-                    "user": "root",
-                    "password": "1234",
-                    "type": "mysql"
-                }
+                "Content-Type": "application/json",
+                "X-Db-Host": "127.0.0.1",
+                "X-Db-Port": "3306",
+                "X-Db-Name": "test",
+                "X-Db-User": "root",
+                "X-Db-Pass": "1234",
+                "X-Db-Type": "mysql"
             }
         },
         "response": {
@@ -167,20 +147,16 @@
         "name": "getPrimaryKeys",
         "timeout": 5,
         "request": {
-            "method": "POST",
+            "method": "GET",
             "path": "/v1/tables/getters_test/primary-keys/",
             "headers": {
-                "Content-Type": "application/json"
-            },
-            "body": {
-                "connectionInfo": {
-                    "host": "127.0.0.1",
-                    "port": "3306",
-                    "dbName": "test",
-                    "user": "root",
-                    "password": "1234",
-                    "type": "mysql"
-                }
+                "Content-Type": "application/json",
+                "X-Db-Host": "127.0.0.1",
+                "X-Db-Port": "3306",
+                "X-Db-Name": "test",
+                "X-Db-User": "root",
+                "X-Db-Pass": "1234",
+                "X-Db-Type": "mysql"
             }
         },
         "response": {
@@ -199,20 +175,16 @@
         "name": "getPrimaryKeys - non-existent table",
         "timeout": 5,
         "request": {
-            "method": "POST",
+            "method": "GET",
             "path": "/v1/tables/table-123/primary-keys/",
             "headers": {
-                "Content-Type": "application/json"
-            },
-            "body": {
-                "connectionInfo": {
-                    "host": "127.0.0.1",
-                    "port": "3306",
-                    "dbName": "test",
-                    "user": "root",
-                    "password": "1234",
-                    "type": "mysql"
-                }
+                "Content-Type": "application/json",
+                "X-Db-Host": "127.0.0.1",
+                "X-Db-Port": "3306",
+                "X-Db-Name": "test",
+                "X-Db-User": "root",
+                "X-Db-Pass": "1234",
+                "X-Db-Type": "mysql"
             }
         },
         "response": {

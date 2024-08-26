@@ -13,19 +13,19 @@ func initAPI(port *string) error {
 
 	v1 := app.Group("/v1")
 
-	v1.Post("/tables/", handleTables)
+	v1.Get("/tables/", handleTables)
 	v1.Put("/tables/", handleDuplicateTable)
 
-	v1.Delete("/tables/:name/", handleDeleteTable)
 	v1.Patch("/tables/:name/", handleRenameTable)
+	v1.Delete("/tables/:name/", handleDeleteTable)
 
-	v1.Post("/tables/:name/columns/", handleColumns)
-	v1.Post("/tables/:name/primary-keys/", handlePrimaryKeys)
-	v1.Post("/tables/:name/records/", handleRecords)
+	v1.Get("/tables/:name/columns/", handleColumns)
+	v1.Get("/tables/:name/primary-keys/", handlePrimaryKeys)
 
-	v1.Put("/tables/:name/records/", handleInsertRecord)
-	v1.Delete("/tables/:name/records/", handleRemoveRecord)
+	v1.Get("/tables/:name/records/", handleRecords)
+	v1.Post("/tables/:name/records/", handleInsertRecord)
 	v1.Patch("/tables/:name/records/", handleEditRecord)
+	v1.Delete("/tables/:name/records/", handleRemoveRecord)
 
 	return app.Listen(fmt.Sprintf(":%s", *port))
 }
