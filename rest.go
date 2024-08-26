@@ -131,8 +131,13 @@ func handleDuplicateTable(c *fiber.Ctx) error {
 	}
 
 	body := new(DuplicateTableRequestBody)
-	if err := c.BodyParser(body); err != nil {
-		return err
+
+	bodyBytes := c.Body()
+	if len(bodyBytes) != 0 {
+		err := c.BodyParser(body)
+		if err != nil {
+			return err
+		}
 	}
 
 	db, err := sqlutils.ConnectDB(connectionInfo)

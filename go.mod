@@ -4,7 +4,7 @@ go 1.22.5
 
 require (
 	github.com/gofiber/fiber/v2 v2.52.5
-	github.com/sgsavu/sqlutils/v4 v4.0.0
+	github.com/sgsavu/sqlutils/v4 v4.1.0
 )
 
 require (
