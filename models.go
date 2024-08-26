@@ -17,8 +17,7 @@ type EditRecordRequestBody struct {
 }
 
 type DuplicateTableRequestBody struct {
-	SourceTableName string `json:"sourceTableName"`
-	NewTableName    string `json:"newTableName"`
+	NewTableName string `json:"newTableName"`
 }
 
 type RenameTableRequestBody struct {

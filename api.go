@@ -14,11 +14,11 @@ func initAPI(port *string) error {
 	v1 := app.Group("/v1")
 
 	v1.Get("/tables/", handleTables)
-	v1.Put("/tables/", handleDuplicateTable)
 
 	v1.Patch("/tables/:name/", handleRenameTable)
 	v1.Delete("/tables/:name/", handleDeleteTable)
 
+	v1.Post("/tables/:name/duplicate", handleDuplicateTable)
 	v1.Get("/tables/:name/columns/", handleColumns)
 	v1.Get("/tables/:name/primary-keys/", handlePrimaryKeys)
 

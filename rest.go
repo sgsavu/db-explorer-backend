@@ -123,6 +123,8 @@ func handleRecords(c *fiber.Ctx) error {
 }
 
 func handleDuplicateTable(c *fiber.Ctx) error {
+	tableName := c.Params("name")
+
 	connectionInfo := new(sqlutils.DBConnection)
 	if err := c.ReqHeaderParser(connectionInfo); err != nil {
 		return err
@@ -142,7 +144,7 @@ func handleDuplicateTable(c *fiber.Ctx) error {
 	}
 	defer db.Close()
 
-	err = sqlutils.DuplicateTable(db, body.SourceTableName, body.NewTableName, connectionInfo.Type)
+	err = sqlutils.DuplicateTable(db, tableName, body.NewTableName, connectionInfo.Type)
 	if err != nil {
 		error := fmt.Sprintf("handleDuplicateTable - %v", err)
 		log.Println(error)
